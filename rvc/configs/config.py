@@ -99,20 +99,13 @@ class Config:
     # check `getattr` and try it for compatibility
     @staticmethod
     def has_mps() -> bool:
-        if not torch.backends.mps.is_available():
-            return False
-        try:
-            torch.zeros(1).to(torch.device("mps"))
-            return True
-        except Exception:
-            return False
+        return torch.backends.mps.is_available() and not torch.zeros(1).to(
+            torch.device("mps")
+        )
 
     @staticmethod
     def has_xpu() -> bool:
-        if hasattr(torch, "xpu") and torch.xpu.is_available():
-            return True
-        else:
-            return False
+        return hasattr(torch, "xpu") and torch.xpu.is_available()
 
     def use_fp32_config(self) -> None:
         for config_file, data in self.json_config.items():
