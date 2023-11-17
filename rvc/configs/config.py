@@ -17,7 +17,7 @@ except (ImportError, Exception):
     pass
 import logging
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 version_config_list: list = [
@@ -35,13 +35,14 @@ class Config:
         return cls._instance
 
     def __init__(self):
-        self.device = "cuda:0"
-        self.is_half = True
-        self.use_jit = False
-        self.n_cpu = 0
-        self.gpu_name = None
+        self.device: str = "cuda:0"
+        self.is_half: bool = True
+        self.use_jit: bool = False
+        self.n_cpu: int = cpu_count()
+        self.gpu_name: str | None = None
         self.json_config = self.load_config_json()
-        self.gpu_mem = None
+        self.gpu_mem: int | None = None
+        self.instead: str | None = None
         (
             self.python_cmd,
             self.listen_port,
@@ -60,8 +61,7 @@ class Config:
 
     @staticmethod
     def arg_parse() -> tuple:
-        exe = sys.executable or "python"
-        parser = argparse.ArgumentParser()
+        parser: argparse.ArgumentParser = argparse.ArgumentParser()
         parser.add_argument("--port", type=int, default=7865, help="Listen port")
         parser.add_argument(
             "--pycmd",
@@ -82,7 +82,7 @@ class Config:
             action="store_true",
             help="torch_dml",
         )
-        cmd_opts = parser.parse_args()
+        cmd_opts: argparse.Namespace = parser.parse_args()
 
         cmd_opts.port = cmd_opts.port if 0 <= cmd_opts.port <= 65535 else 7865
 
