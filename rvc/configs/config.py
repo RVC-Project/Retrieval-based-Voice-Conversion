@@ -94,8 +94,6 @@ class Config:
             cmd_opts.dml,
         )
 
-    # has_mps is only available in nightly pytorch (for now) and MasOS 12.3+.
-    # check `getattr` and try it for compatibility
     @staticmethod
     def has_mps() -> bool:
         return torch.backends.mps.is_available() and not torch.zeros(1).to(
