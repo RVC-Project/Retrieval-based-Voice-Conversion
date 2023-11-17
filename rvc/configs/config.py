@@ -28,18 +28,12 @@ version_config_list: list = [
 ]
 
 
-def singleton_variable(func):
-    def wrapper(*args, **kwargs):
-        if not wrapper.instance:
-            wrapper.instance = func(*args, **kwargs)
-        return wrapper.instance
-
-    wrapper.instance = None
-    return wrapper
-
-
-@singleton_variable
 class Config:
+    def __new__(cls):
+        if not hasattr(cls, "_instance"):
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
         self.device = "cuda:0"
         self.is_half = True
