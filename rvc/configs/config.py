@@ -45,7 +45,6 @@ class Config:
         (
             self.python_cmd,
             self.listen_port,
-            self.iscolab,
             self.noparallel,
             self.noautoopen,
             self.dml,
@@ -65,8 +64,12 @@ class Config:
         exe = sys.executable or "python"
         parser = argparse.ArgumentParser()
         parser.add_argument("--port", type=int, default=7865, help="Listen port")
-        parser.add_argument("--pycmd", type=str, default=exe, help="Python command")
-        parser.add_argument("--colab", action="store_true", help="Launch in colab")
+        parser.add_argument(
+            "--pycmd",
+            type=str,
+            default=sys.executable or "python",
+            help="Python command",
+        )
         parser.add_argument(
             "--noparallel", action="store_true", help="Disable parallel processing"
         )
@@ -87,7 +90,6 @@ class Config:
         return (
             cmd_opts.pycmd,
             cmd_opts.port,
-            cmd_opts.colab,
             cmd_opts.noparallel,
             cmd_opts.noautoopen,
             cmd_opts.dml,
