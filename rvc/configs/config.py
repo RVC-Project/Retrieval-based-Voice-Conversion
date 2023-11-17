@@ -7,13 +7,13 @@ from multiprocessing import cpu_count
 import torch
 
 try:
-    import intel_extension_for_pytorch as ipex  # pylint: disable=import-error, unused-import
+    import intel_extension_for_pytorch as ipex
 
     if torch.xpu.is_available():
         from rvc.lib.ipex import ipex_init
 
         ipex_init()
-except Exception:  # pylint: disable=broad-exception-caught
+except (ImportError, Exception):
     pass
 import logging
 
