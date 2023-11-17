@@ -1,7 +1,8 @@
 import argparse
+import json
+import logging
 import os
 import sys
-import json
 from multiprocessing import cpu_count
 
 import torch
@@ -15,7 +16,6 @@ try:
         ipex_init()
 except (ImportError, Exception):
     pass
-import logging
 
 logger: logging.Logger = logging.getLogger(__name__)
 
