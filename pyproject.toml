@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "rvc"
+version = "0.1.0"
+description = ""
+authors = ["Ftps <ftpsflandre@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.2"
+torch = "^2.1.0"
+fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
+soundfile = "^0.12.1"
+librosa = "^0.10.1"
+praat-parselmouth = "^0.4.3"
+pyworld = "^0.3.4"
+torchcrepe = "^0.0.22"
+av = "^11.0.0"
+faiss-cpu = "^1.7.4"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
