@@ -135,9 +135,7 @@ def ipex_init():
             torch.cuda.amp.GradScaler = torch.xpu.amp.GradScaler
         except Exception:
             try:
-                from .gradscaler import (
-                    gradscaler_init,
-                )
+                from .gradscaler import gradscaler_init
 
                 gradscaler_init()
                 torch.cuda.amp.GradScaler = torch.xpu.amp.GradScaler

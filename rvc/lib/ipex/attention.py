@@ -1,7 +1,6 @@
 import intel_extension_for_pytorch as ipex
 import torch
 
-
 original_torch_bmm = torch.bmm
 
 

@@ -4,7 +4,6 @@ import intel_extension_for_pytorch as ipex
 import intel_extension_for_pytorch._C as core
 import torch
 
-
 OptState = ipex.cpu.autocast._grad_scaler.OptState
 _MultiDeviceReplicator = ipex.cpu.autocast._grad_scaler._MultiDeviceReplicator
 _refresh_per_optimizer_state = (
