@@ -144,24 +144,15 @@ class VC:
                 protect,
                 f0_file,
             )
-            if self.tgt_sr != resample_sr >= 16000:
-                tgt_sr = resample_sr
-            else:
-                tgt_sr = self.tgt_sr
-            index_info = (
-                "Index:\n%s." % file_index
-                if os.path.exists(file_index)
-                else "Index not used."
-            )
-            return (
-                "Success.\n%s\nTime:\nnpy: %.2fs, f0: %.2fs, infer: %.2fs."
-                % (index_info, *times),
-                (tgt_sr, audio_opt),
-            )
-        except:
+
+            tgt_sr = resample_sr if self.tgt_sr != resample_sr >= 16000 else self.tgt_sr
+
+            return tgt_sr, audio_opt, times, None
+
+        except Exception:
             info = traceback.format_exc()
             logger.warning(info)
-            return info, (None, None)
+            return None, None, None, info
 
     def vc_multi(
         self,
