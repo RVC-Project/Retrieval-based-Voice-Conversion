@@ -36,20 +36,10 @@ class VC:
     def get_vc(self, sid, *to_return_protect):
         logger.info("Get sid: " + sid)
 
-        to_return_protect0 = {
-            "visible": self.if_f0 != 0,
-            "value": to_return_protect[0]
-            if self.if_f0 != 0 and to_return_protect
-            else 0.5,
-            "__type__": "update",
-        }
-        to_return_protect1 = {
-            "visible": self.if_f0 != 0,
-            "value": to_return_protect[1]
-            if self.if_f0 != 0 and to_return_protect
-            else 0.33,
-            "__type__": "update",
-        }
+        return_protect = [
+            to_return_protect[0] if self.if_f0 != 0 and to_return_protect else 0.5,
+            to_return_protect[1] if self.if_f0 != 0 and to_return_protect else 0.33,
+        ]
 
         person = f'{os.getenv("weight_root")}/{sid}'
         logger.info(f"Loading: {person}")
@@ -90,17 +80,7 @@ class VC:
         index = {"value": get_index_path_from_model(sid), "__type__": "update"}
         logger.info("Select index: " + index["value"])
 
-        return (
-            (
-                {"visible": True, "maximum": n_spk, "__type__": "update"},
-                to_return_protect0,
-                to_return_protect1,
-                index,
-                index,
-            )
-            if to_return_protect
-            else {"visible": True, "maximum": n_spk, "__type__": "update"}
-        )
+        return self.n_spk, return_protect, index
 
     def vc_single(
         self,
