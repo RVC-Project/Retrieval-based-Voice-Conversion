@@ -105,7 +105,7 @@ class VC:
             audio_max = np.abs(audio).max() / 0.95
             if audio_max > 1:
                 audio /= audio_max
-            times = [0, 0, 0]
+            times = {"npy": 0, "f0": 0, "infer": 0}
 
             if self.hubert_model is None:
                 self.hubert_model = load_hubert(self.config)
