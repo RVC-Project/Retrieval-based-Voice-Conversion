@@ -172,21 +172,8 @@ class VC:
         format1,
     ):
         try:
-            dir_path = (
-                dir_path.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
-            )  # 防止小白拷路径头尾带了空格和"和回车
-            opt_root = opt_root.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
             os.makedirs(opt_root, exist_ok=True)
-            try:
-                if dir_path != "":
-                    paths = [
-                        os.path.join(dir_path, name) for name in os.listdir(dir_path)
-                    ]
-                else:
-                    paths = [path.name for path in paths]
-            except:
-                traceback.print_exc()
-                paths = [path.name for path in paths]
+            paths = [path.name for path in paths]
             infos = []
             for path in paths:
                 info, opt = self.vc_single(
