@@ -75,10 +75,10 @@ class VC:
                 self.net_g.half() if self.config.is_half else self.net_g.float()
             )
 
-        self.pipeline = Pipeline(self.tgt_sr, self.config)
-        n_spk = self.cpt["config"][-3]
-        index = {"value": get_index_path_from_model(sid), "__type__": "update"}
-        logger.info("Select index: " + index["value"])
+            self.pipeline = Pipeline(self.tgt_sr, self.config)
+            self.n_spk = self.cpt["config"][-3]
+            index = get_index_path_from_model(sid)
+            logger.info("Select index: " + index)
 
         return self.n_spk, return_protect, index
 
