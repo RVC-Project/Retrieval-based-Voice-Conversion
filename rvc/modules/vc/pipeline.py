@@ -274,8 +274,8 @@ class Pipeline(object):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         t2 = ttime()
-        times[0] += t1 - t0
-        times[2] += t2 - t1
+        times["npy"] += t1 - t0
+        times["infer"] += t2 - t1
         return audio1
 
     def pipeline(
@@ -367,7 +367,7 @@ class Pipeline(object):
             pitch = torch.tensor(pitch, device=self.device).unsqueeze(0).long()
             pitchf = torch.tensor(pitchf, device=self.device).unsqueeze(0).float()
         t2 = ttime()
-        times[1] += t2 - t1
+        times["f0"] += t2 - t1
         for t in opt_ts:
             t = t // self.window * self.window
             if if_f0 == 1:
