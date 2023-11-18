@@ -176,45 +176,40 @@ class VC:
             paths = [path.name for path in paths]
             infos = []
             for path in paths:
-                info, opt = self.vc_single(
+                tgt_sr, audio_opt, _, info = self.vc_single(
                     sid,
-                    path,
+                    Path(path),
                     f0_up_key,
-                    None,
                     f0_method,
-                    file_index,
-                    file_index2,
-                    # file_big_npy,
+                    f0_file,
+                    index_file,
                     index_rate,
                     filter_radius,
                     resample_sr,
                     rms_mix_rate,
                     protect,
+                    hubert_path,
                 )
-                if "Success" in info:
+                if info:
                     try:
-                        tgt_sr, audio_opt = opt
-                        if format1 in ["wav", "flac"]:
+                        if output_format in ["wav", "flac"]:
                             sf.write(
-                                "%s/%s.%s"
-                                % (opt_root, os.path.basename(path), format1),
+                                f"{opt_root}/{os.path.basename(path)}.{output_format}",
                                 audio_opt,
                                 tgt_sr,
                             )
                         else:
-                            path = "%s/%s.%s" % (
-                                opt_root,
-                                os.path.basename(path),
-                                format1,
-                            )
                             with BytesIO() as wavf:
                                 sf.write(wavf, audio_opt, tgt_sr, format="wav")
                                 wavf.seek(0, 0)
-                                with open(path, "wb") as outf:
-                                    wav2(wavf, outf, format1)
-                    except:
+                                with open(
+                                    f"{opt_root}/{os.path.basename(path)}.{output_format}",
+                                    "wb",
+                                ) as outf:
+                                    wav2(wavf, outf, output_format)
+                    except Exception:
                         info += traceback.format_exc()
-                infos.append("%s->%s" % (os.path.basename(path), info))
+                infos.append(f"{os.path.basename(path)}->{info}")
                 yield "\n".join(infos)
             yield "\n".join(infos)
         except:
