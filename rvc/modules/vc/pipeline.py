@@ -1,10 +1,7 @@
+import logging
 import os
 import sys
 import traceback
-import logging
-
-logger = logging.getLogger(__name__)
-
 from functools import lru_cache
 from time import time as ttime
 
