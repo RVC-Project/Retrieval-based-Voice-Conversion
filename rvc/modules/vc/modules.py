@@ -99,9 +99,8 @@ class VC:
         protect: float = 0.33,
         hubert_path: str | None = None,
     ):
-        if input_audio_path is None:
-            return "You need to upload an audio", None
-        f0_up_key = int(f0_up_key)
+        hubert_path = os.getenv("hubert_path") if not hubert_path else hubert_path
+
         try:
             audio = load_audio(input_audio_path, 16000)
             audio_max = np.abs(audio).max() / 0.95
