@@ -18,22 +18,24 @@ from rvc.lib.infer_pack.models import (
 from rvc.modules.vc.pipeline import Pipeline
 from rvc.modules.vc.utils import *
 
+logger: logging.Logger = logging.getLogger(__name__)
+
 
 class VC:
-    def __init__(self, config):
-        self.n_spk = None
-        self.tgt_sr = None
+    def __init__(self):
+        self.n_spk: any = None
+        self.tgt_sr: int | None = None
         self.net_g = None
-        self.pipeline = None
-        self.cpt = None
-        self.version = None
-        self.if_f0 = None
-        self.version = None
-        self.hubert_model = None
+        self.pipeline: Pipeline | None = None
+        self.cpt: OrderedDict | None = None
+        self.version: str | None = None
+        self.if_f0: int | None = None
+        self.version: str | None = None
+        self.hubert_model: any = None
 
-        self.config = config
+        self.config = Config()
 
-    def get_vc(self, sid, *to_return_protect):
+    def get_vc(self, sid: str, *to_return_protect: int):
         logger.info("Get sid: " + sid)
 
         return_protect = [
@@ -84,18 +86,18 @@ class VC:
 
     def vc_single(
         self,
-        sid,
-        input_audio_path,
-        f0_up_key,
-        f0_file,
-        f0_method,
-        file_index,
-        file_index2,
-        index_rate,
-        filter_radius,
-        resample_sr,
-        rms_mix_rate,
-        protect,
+        sid: int,
+        input_audio_path: Path,
+        f0_up_key: int = 0,
+        f0_method: str = "rmvpe",
+        f0_file: Path | None = None,
+        index_file: Path | None = None,
+        index_rate: float = 0.75,
+        filter_radius: int = 3,
+        resample_sr: int = 0,
+        rms_mix_rate: float = 0.25,
+        protect: float = 0.33,
+        hubert_path: str | None = None,
     ):
         if input_audio_path is None:
             return "You need to upload an audio", None
@@ -108,21 +110,7 @@ class VC:
             times = {"npy": 0, "f0": 0, "infer": 0}
 
             if self.hubert_model is None:
-                self.hubert_model = load_hubert(self.config)
-
-            if file_index:
-                file_index = (
-                    file_index.strip(" ")
-                    .strip('"')
-                    .strip("\n")
-                    .strip('"')
-                    .strip(" ")
-                    .replace("trained", "added")
-                )
-            elif file_index2:
-                file_index = file_index2
-            else:
-                file_index = ""  # 防止小白写错，自动帮他替换掉
+                self.hubert_model = load_hubert(self.config, hubert_path)
 
             audio_opt = self.pipeline.pipeline(
                 self.hubert_model,
@@ -133,7 +121,7 @@ class VC:
                 times,
                 f0_up_key,
                 f0_method,
-                file_index,
+                index_file,
                 index_rate,
                 self.if_f0,
                 filter_radius,
@@ -156,20 +144,20 @@ class VC:
 
     def vc_multi(
         self,
-        sid,
-        dir_path,
-        opt_root,
-        paths,
-        f0_up_key,
-        f0_method,
-        file_index,
-        file_index2,
-        index_rate,
-        filter_radius,
-        resample_sr,
-        rms_mix_rate,
-        protect,
-        format1,
+        sid: int,
+        paths: list,
+        opt_root: Path,
+        f0_up_key: int = 0,
+        f0_method: str = "rmvpe",
+        f0_file: Path | None = None,
+        index_file: Path | None = None,
+        index_rate: float = 0.75,
+        filter_radius: int = 3,
+        resample_sr: int = 0,
+        rms_mix_rate: float = 0.25,
+        protect: float = 0.33,
+        output_format: str = "wav",
+        hubert_path: str | None = None,
     ):
         try:
             os.makedirs(opt_root, exist_ok=True)
