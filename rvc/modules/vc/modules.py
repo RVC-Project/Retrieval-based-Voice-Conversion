@@ -51,50 +51,6 @@ class VC:
             "__type__": "update",
         }
 
-        if sid == "" or sid == []:
-            if self.hubert_model is not None:  # 考虑到轮询, 需要加个判断看是否 sid 是由有模型切换到无模型的
-                logger.info("Clean model cache")
-                del (self.net_g, self.n_spk, self.hubert_model, self.tgt_sr)  # ,cpt
-                self.hubert_model = (
-                    self.net_g
-                ) = self.n_spk = self.hubert_model = self.tgt_sr = None
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-                ###楼下不这么折腾清理不干净
-                self.if_f0 = self.cpt.get("f0", 1)
-                self.version = self.cpt.get("version", "v1")
-                if self.version == "v1":
-                    if self.if_f0 == 1:
-                        self.net_g = SynthesizerTrnMs256NSFsid(
-                            *self.cpt["config"], is_half=self.config.is_half
-                        )
-                    else:
-                        self.net_g = SynthesizerTrnMs256NSFsid_nono(*self.cpt["config"])
-                elif self.version == "v2":
-                    if self.if_f0 == 1:
-                        self.net_g = SynthesizerTrnMs768NSFsid(
-                            *self.cpt["config"], is_half=self.config.is_half
-                        )
-                    else:
-                        self.net_g = SynthesizerTrnMs768NSFsid_nono(*self.cpt["config"])
-                del self.net_g, self.cpt
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            return (
-                {"visible": False, "__type__": "update"},
-                {
-                    "visible": True,
-                    "value": to_return_protect0,
-                    "__type__": "update",
-                },
-                {
-                    "visible": True,
-                    "value": to_return_protect1,
-                    "__type__": "update",
-                },
-                "",
-                "",
-            )
         person = f'{os.getenv("weight_root")}/{sid}'
         logger.info(f"Loading: {person}")
 
@@ -117,12 +73,17 @@ class VC:
 
         del self.net_g.enc_q
 
-        self.net_g.load_state_dict(self.cpt["weight"], strict=False)
-        self.net_g.eval().to(self.config.device)
-        if self.config.is_half:
-            self.net_g = self.net_g.half()
+        if sid == "" or []:
+            logger.info("Clean model cache")
+            del (self.hubert_model, self.tgt_sr, self.net_g)
+            (self.net_g) = self.n_spk = index = None
+
         else:
-            self.net_g = self.net_g.float()
+            self.net_g.load_state_dict(self.cpt["weight"], strict=False)
+            self.net_g.eval().to(self.config.device)
+            self.net_g = (
+                self.net_g.half() if self.config.is_half else self.net_g.float()
+            )
 
         self.pipeline = Pipeline(self.tgt_sr, self.config)
         n_spk = self.cpt["config"][-3]
