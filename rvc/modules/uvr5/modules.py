@@ -9,7 +9,7 @@ from rvc.configs.config import Config
 from rvc.modules.uvr5.mdxnet import MDXNetDereverb
 from rvc.modules.uvr5.vr import AudioPre, AudioPreDeEcho
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 config = Config()
 
 

@@ -27,7 +27,7 @@ class AudioPre:
             "agg": agg,
             "high_end_process": "mirroring",
         }
-        mp = ModelParameters("infer/lib/uvr5_pack/lib_v5/modelparams/4band_v2.json")
+        mp = ModelParameters("rvc/lib/uvr5_pack/lib_v5/modelparams/4band_v2.json")
         model = Nets.CascadedASPPNet(mp.param["bins"] * 2)
         cpk = torch.load(model_path, map_location="cpu")
         model.load_state_dict(cpk)
@@ -43,23 +43,24 @@ class AudioPre:
     def _path_audio_(
         self, music_file, ins_root=None, vocal_root=None, format="flac", is_hp3=False
     ):
-        if ins_root is None and vocal_root is None:
-            return "No save root."
         name = os.path.basename(music_file)
-        if ins_root is not None:
+        if (ins_root and vocal_root) is None:
+            return "No save root."
+        else:
             os.makedirs(ins_root, exist_ok=True)
-        if vocal_root is not None:
             os.makedirs(vocal_root, exist_ok=True)
+
         X_wave, y_wave, X_spec_s, y_spec_s = {}, {}, {}, {}
         bands_n = len(self.mp.param["band"])
         # print(bands_n)
         for d in range(bands_n, 0, -1):
             bp = self.mp.param["band"][d]
             if d == bands_n:  # high-end band
+                # librosa loading may be buggy for some audio. ffmpeg will solve this, but it's a pain
                 (
                     X_wave[d],
                     _,
-                ) = librosa.core.load(  # 理论上librosa读取可能对某些音频有bug，应该上ffmpeg读取，但是太麻烦了弃坑
+                ) = librosa.core.load(
                     music_file,
                     bp["sr"],
                     False,
@@ -121,7 +122,7 @@ class AudioPre:
             else:
                 wav_instrument = spec_utils.cmb_spectrogram_to_wave(y_spec_m, self.mp)
             logger.info("%s instruments done" % name)
-            if is_hp3 == True:
+            if is_hp3:
                 head = "vocal_"
             else:
                 head = "instrument_"
@@ -129,15 +130,13 @@ class AudioPre:
                 sf.write(
                     os.path.join(
                         ins_root,
-                        head + "{}_{}.{}".format(name, self.data["agg"], format),
+                        head + f"{name}_{self.data['agg']}.{format}",
                     ),
                     (np.array(wav_instrument) * 32768).astype("int16"),
                     self.mp.param["sr"],
                 )  #
             else:
-                path = os.path.join(
-                    ins_root, head + "{}_{}.wav".format(name, self.data["agg"])
-                )
+                path = os.path.join(ins_root, head + f"{name}_{self.data['agg']}.wav")
                 sf.write(
                     path,
                     (np.array(wav_instrument) * 32768).astype("int16"),
@@ -149,13 +148,10 @@ class AudioPre:
                     if os.path.exists(opt_format_path):
                         try:
                             os.remove(path)
-                        except:
+                        except Exception:
                             pass
         if vocal_root is not None:
-            if is_hp3 == True:
-                head = "instrument_"
-            else:
-                head = "vocal_"
+            head = "instrument_" if is_hp3 else "vocal_"
             if self.data["high_end_process"].startswith("mirroring"):
                 input_high_end_ = spec_utils.mirroring(
                     self.data["high_end_process"], v_spec_m, input_high_end, self.mp
@@ -165,28 +161,26 @@ class AudioPre:
                 )
             else:
                 wav_vocals = spec_utils.cmb_spectrogram_to_wave(v_spec_m, self.mp)
-            logger.info("%s vocals done" % name)
+            logger.info(f"{name} vocals done")
             if format in ["wav", "flac"]:
                 sf.write(
                     os.path.join(
                         vocal_root,
-                        head + "{}_{}.{}".format(name, self.data["agg"], format),
+                        head + f"{name}_{self.data['agg']}.{format}",
                     ),
                     (np.array(wav_vocals) * 32768).astype("int16"),
                     self.mp.param["sr"],
                 )
             else:
-                path = os.path.join(
-                    vocal_root, head + "{}_{}.wav".format(name, self.data["agg"])
-                )
+                path = os.path.join(vocal_root, head + f"{name}_{self.data['agg']}.wav")
                 sf.write(
                     path,
                     (np.array(wav_vocals) * 32768).astype("int16"),
                     self.mp.param["sr"],
                 )
                 if os.path.exists(path):
-                    opt_format_path = path[:-4] + ".%s" % format
-                    os.system("ffmpeg -i %s -vn %s -q:a 2 -y" % (path, opt_format_path))
+                    opt_format_path = path[:-4] + f".{format}"
+                    os.system(f"ffmpeg -i {path} -vn {opt_format_path} -q:a 2 -y")
                     if os.path.exists(opt_format_path):
                         try:
                             os.remove(path)
@@ -207,7 +201,7 @@ class AudioPreDeEcho:
             "agg": agg,
             "high_end_process": "mirroring",
         }
-        mp = ModelParameters("infer/lib/uvr5_pack/lib_v5/modelparams/4band_v3.json")
+        mp = ModelParameters("rvc/lib/uvr5_pack/lib_v5/modelparams/4band_v3.json")
         nout = 64 if "DeReverb" in model_path else 48
         model = CascadedNet(mp.param["bins"] * 2, nout)
         cpk = torch.load(model_path, map_location="cpu")
@@ -224,23 +218,24 @@ class AudioPreDeEcho:
     def _path_audio_(
         self, music_file, vocal_root=None, ins_root=None, format="flac", is_hp3=False
     ):  # 3个VR模型vocal和ins是反的
-        if ins_root is None and vocal_root is None:
-            return "No save root."
         name = os.path.basename(music_file)
-        if ins_root is not None:
+        if (ins_root and vocal_root) is None:
+            return "No save root."
+        else:
             os.makedirs(ins_root, exist_ok=True)
-        if vocal_root is not None:
             os.makedirs(vocal_root, exist_ok=True)
+
         X_wave, y_wave, X_spec_s, y_spec_s = {}, {}, {}, {}
         bands_n = len(self.mp.param["band"])
         # print(bands_n)
         for d in range(bands_n, 0, -1):
             bp = self.mp.param["band"][d]
             if d == bands_n:  # high-end band
+                # librosa loading may be buggy for some audio. ffmpeg will solve this, but it's a pain
                 (
                     X_wave[d],
                     _,
-                ) = librosa.core.load(  # 理论上librosa读取可能对某些音频有bug，应该上ffmpeg读取，但是太麻烦了弃坑
+                ) = librosa.core.load(
                     music_file,
                     bp["sr"],
                     False,

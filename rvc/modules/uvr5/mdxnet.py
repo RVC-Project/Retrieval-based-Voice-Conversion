@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 cpu = torch.device("cpu")
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class ConvTDFNetTrim:
@@ -158,7 +158,7 @@ class Predictor:
             mix_waves = []
             i = 0
             while i < n_sample + pad:
-                waves = np.array(mix_p[:, i: i + model.chunk_size])
+                waves = np.array(mix_p[:, i : i + model.chunk_size])
                 mix_waves.append(waves)
                 i += gen_size
             mix_waves = torch.tensor(mix_waves, dtype=torch.float32).to(cpu)
