@@ -43,8 +43,8 @@ def wave_to_spectrogram(
         wave_left = np.asfortranarray(wave[0])
         wave_right = np.asfortranarray(wave[1])
 
-    spec_left = librosa.stft(wave_left, n_fft, hop_length=hop_length)
-    spec_right = librosa.stft(wave_right, n_fft, hop_length=hop_length)
+    spec_left = librosa.stft(wave_left, n_fft=n_fft, hop_length=hop_length)
+    spec_right = librosa.stft(wave_right, n_fft=n_fft, hop_length=hop_length)
 
     spec = np.asfortranarray([spec_left, spec_right])
 
@@ -78,7 +78,7 @@ def wave_to_spectrogram_mt(
         kwargs={"y": wave_left, "n_fft": n_fft, "hop_length": hop_length},
     )
     thread.start()
-    spec_right = librosa.stft(wave_right, n_fft, hop_length=hop_length)
+    spec_right = librosa.stft(wave_right, n_fft=n_fft, hop_length=hop_length)
     thread.join()
 
     spec = np.asfortranarray([spec_left, spec_right])
@@ -401,8 +401,8 @@ def cmb_spectrogram_to_wave(spec_m, mp, extra_bins_h=None, extra_bins=None):
                         mp.param["mid_side_b2"],
                         mp.param["reverse"],
                     ),
-                    bp["sr"],
-                    sr,
+                    orig_sr=bp["sr"],
+                    target_sr=sr,
                     res_type="sinc_fastest",
                 )
             else:  # mid
@@ -419,7 +419,9 @@ def cmb_spectrogram_to_wave(spec_m, mp, extra_bins_h=None, extra_bins=None):
                     ),
                 )
                 # wave = librosa.core.resample(wave2, bp['sr'], sr, res_type="sinc_fastest")
-                wave = librosa.core.resample(wave2, bp["sr"], sr, res_type="scipy")
+                wave = librosa.core.resample(
+                    wave2, orig_sr=bp["sr"], target_sr=sr, res_type="scipy"
+                )
 
     return wave.T
 
