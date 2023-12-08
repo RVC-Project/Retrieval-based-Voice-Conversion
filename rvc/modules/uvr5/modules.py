@@ -1,100 +1,93 @@
 import logging
 import os
 import traceback
+from glob import glob
+from pathlib import Path
 
-
-import ffmpeg
+import soundfile as sf
 import torch
+from pydub import AudioSegment
+
 from rvc.configs.config import Config
 from rvc.modules.uvr5.mdxnet import MDXNetDereverb
 from rvc.modules.uvr5.vr import AudioPre, AudioPreDeEcho
 
 logger: logging.Logger = logging.getLogger(__name__)
-config = Config()
 
 
-def uvr(model_name, inp_root, save_root_vocal, paths, save_root_ins, agg, format0):
-    infos = []
-    try:
+class UVR:
+    def __init__(self):
+        self.need_reformat: bool = True
+        self.config: Config = Config()
+
+    def uvr_wrapper(
+        self,
+        audio_path: Path,
+        save_vocal_path: Path | None = None,
+        save_ins_path: Path | None = None,
+        agg: int = 10,
+        export_format: str = "flac",
+        model_name: str | None = None,
+        temp_path: Path | None = None,
+    ):
+        infos = []
+        save_vocal_path = (
+            os.getenv("save_uvr_path") if not save_vocal_path else save_vocal_path
+        )
+        save_ins_path = (
+            os.getenv("save_uvr_path") if not save_ins_path else save_ins_path
+        )
+
+        if model_name is None:
+            model_name = os.path.basename(glob(f"{os.getenv('weight_uvr5_root')}/*")[0])
+        is_hp3 = "HP3" in model_name
+
         if model_name == "onnx_dereverb_By_FoxJoy":
-            pre_fun = MDXNetDereverb(15, config.device)
+            pre_fun = MDXNetDereverb(15, self.config.device)
         else:
             func = AudioPre if "DeEcho" not in model_name else AudioPreDeEcho
             pre_fun = func(
                 agg=int(agg),
                 model_path=os.path.join(
-                    os.getenv("weight_uvr5_root"), model_name + ".pth"
+                    os.getenv("weight_uvr5_root"), model_name  # + ".pth"
                 ),
-                device=config.device,
-                is_half=config.is_half,
+                device=self.config.device,
+                is_half=self.config.is_half,
             )
-        is_hp3 = "HP3" in model_name
-        if inp_root != "":
-            paths = [os.path.join(inp_root, name) for name in os.listdir(inp_root)]
-        else:
-            paths = [path.name for path in paths]
-        for path in paths:
-            inp_path = os.path.join(inp_root, path)
-            need_reformat = 1
-            done = 0
-            try:
-                info = ffmpeg.probe(inp_path, cmd="ffprobe")
-                if (
-                    info["streams"][0]["channels"] == 2
-                    and info["streams"][0]["sample_rate"] == "44100"
-                ):
-                    need_reformat = 0
-                    pre_fun._path_audio_(
-                        inp_path, save_root_ins, save_root_vocal, format0, is_hp3=is_hp3
-                    )
-                    done = 1
-            except:
-                need_reformat = 1
-                traceback.print_exc()
-            if need_reformat == 1:
-                tmp_path = "%s/%s.reformatted.wav" % (
-                    os.path.join(os.environ["TEMP"]),
-                    os.path.basename(inp_path),
+
+        process_paths = (
+            [
+                _
+                for _ in glob(f"{audio_path}/*")
+                if os.path.splitext(_)[-1][1:].upper() in sf.available_formats()
+            ]
+            if os.path.isdir(audio_path)
+            else audio_path
+        )
+
+        for process_path in [process_paths]:
+            print(f"path: {process_path}")
+            info = sf.info(process_path)
+            if not (info.channels == 2 and info.samplerate == "44100"):
+                tmp_path = os.path.join(
+                    temp_path or os.environ.get("TEMP"), os.path.basename(process_path)
                 )
-                os.system(
-                    "ffmpeg -i %s -vn -acodec pcm_s16le -ac 2 -ar 44100 %s -y"
-                    % (inp_path, tmp_path)
+                AudioSegment.from_file(process_path).export(
+                    tmp_path,
+                    format="wav",
+                    codec="pcm_s16le",
+                    bitrate="16k",
+                    parameters=["-ar", "44100"],
                 )
-                inp_path = tmp_path
-            try:
-                if done == 0:
-                    pre_fun._path_audio_(
-                        inp_path, save_root_ins, save_root_vocal, format0
-                    )
-                infos.append("%s->Success" % (os.path.basename(inp_path)))
-                yield "\n".join(infos)
-            except:
-                try:
-                    if done == 0:
-                        pre_fun._path_audio_(
-                            inp_path, save_root_ins, save_root_vocal, format0
-                        )
-                    infos.append("%s->Success" % (os.path.basename(inp_path)))
-                    yield "\n".join(infos)
-                except:
-                    infos.append(
-                        "%s->%s" % (os.path.basename(inp_path), traceback.format_exc())
-                    )
-                    yield "\n".join(infos)
-    except:
-        infos.append(traceback.format_exc())
-        yield "\n".join(infos)
-    finally:
-        try:
-            if model_name == "onnx_dereverb_By_FoxJoy":
-                del pre_fun.pred.model
-                del pre_fun.pred.model_
-            else:
-                del pre_fun.model
-                del pre_fun
-        except:
-            traceback.print_exc()
+
+            pre_fun._path_audio_(
+                process_path,
+                save_vocal_path,
+                save_ins_path,
+                export_format,
+                is_hp3=is_hp3,
+            )
+            infos.append(f"{os.path.basename(process_path)}->Success" )
+            yield "\n".join(infos)
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
-            logger.info("Executed torch.cuda.empty_cache()")
-    yield "\n".join(infos)
