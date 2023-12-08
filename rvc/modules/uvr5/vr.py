@@ -5,6 +5,7 @@ import librosa
 import numpy as np
 import soundfile as sf
 import torch
+
 from rvc.lib.uvr5_pack.lib_v5 import nets_61968KB as Nets
 from rvc.lib.uvr5_pack.lib_v5 import spec_utils
 from rvc.lib.uvr5_pack.lib_v5.model_param_init import ModelParameters
@@ -62,8 +63,8 @@ class AudioPre:
                     _,
                 ) = librosa.core.load(
                     music_file,
-                    bp["sr"],
-                    False,
+                    sr=bp["sr"],
+                    mono=False,
                     dtype=np.float32,
                     res_type=bp["res_type"],
                 )
@@ -72,8 +73,8 @@ class AudioPre:
             else:  # lower bands
                 X_wave[d] = librosa.core.resample(
                     X_wave[d + 1],
-                    self.mp.param["band"][d + 1]["sr"],
-                    bp["sr"],
+                    orig_sr=self.mp.param["band"][d + 1]["sr"],
+                    target_sr=bp["sr"],
                     res_type=bp["res_type"],
                 )
             # Stft of wave source
