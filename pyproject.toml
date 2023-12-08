@@ -17,6 +17,7 @@ torchcrepe = "^0.0.22"
 av = "^11.0.0"
 faiss-cpu = "^1.7.4"
 python-dotenv = "^1.0.0"
+pydub = "^0.25.1"
 
 
 [build-system]
