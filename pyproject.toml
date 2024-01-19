@@ -18,7 +18,10 @@ av = "^11.0.0"
 faiss-cpu = "^1.7.4"
 python-dotenv = "^1.0.0"
 pydub = "^0.25.1"
+click = "^8.1.7"
 
+[project.scripts]
+rvc = "rvc:cli"
 
 [build-system]
 requires = ["poetry-core"]
