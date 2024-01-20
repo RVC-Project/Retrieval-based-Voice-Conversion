@@ -82,7 +82,8 @@ class Config:
             action="store_true",
             help="torch_dml",
         )
-        cmd_opts: argparse.Namespace = parser.parse_args()
+        cmd_opts: argparse.Namespace
+        cmd_opts, _ = parser.parse_known_args()
 
         cmd_opts.port = cmd_opts.port if 0 <= cmd_opts.port <= 65535 else 7865
 

@@ -87,7 +87,7 @@ class UVR:
                 export_format,
                 is_hp3=is_hp3,
             )
-            infos.append(f"{os.path.basename(process_path)}->Success" )
+            infos.append(f"{os.path.basename(process_path)}->Success")
             yield "\n".join(infos)
         if torch.cuda.is_available():
             torch.cuda.empty_cache()

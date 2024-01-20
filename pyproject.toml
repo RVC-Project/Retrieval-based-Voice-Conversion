@@ -19,6 +19,7 @@ faiss-cpu = "^1.7.4"
 python-dotenv = "^1.0.0"
 pydub = "^0.25.1"
 click = "^8.1.7"
+tensorboardx = "^2.6.2.2"
 
 [project.scripts]
 rvc = "rvc:cli"

@@ -45,7 +45,7 @@ class VC:
             to_return_protect[1] if self.if_f0 != 0 and to_return_protect else 0.33,
         ]
 
-        person = f'{os.getenv("weight_root")}/{sid}'
+        person = sid if os.path.exists(sid) else f'{os.getenv("weight_root")}/{sid}'
         logger.info(f"Loading: {person}")
 
         self.cpt = torch.load(person, map_location="cpu")
