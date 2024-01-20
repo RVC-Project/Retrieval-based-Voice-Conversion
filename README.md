@@ -16,4 +16,6 @@ An easy-to-use Voice Conversion framework based on VITS.<br><br>
 
 ------
 
-Currently under development...
+
+> [!NOTE]
+> Currently under development... Provided as a library and API in rvc
