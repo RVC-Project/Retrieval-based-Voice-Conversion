@@ -7,7 +7,6 @@ from scipy.io import wavfile
 
 from rvc.modules.vc.modules import VC
 
-
 logging.getLogger("numba").setLevel(logging.WARNING)
 
 

@@ -9,7 +9,9 @@ def export_onnx(ModelPath, ExportedPath):
     vec_channels = 256 if cpt.get("version", "v1") == "v1" else 768
 
     test_phone = torch.rand(1, 200, vec_channels)  # hidden unit
-    test_phone_lengths = torch.tensor([200]).long()  # hidden unit length (doesn't seem to help)）
+    test_phone_lengths = torch.tensor(
+        [200]
+    ).long()  # hidden unit length (doesn't seem to help)）
     test_pitch = torch.randint(size=(1, 200), low=5, high=255)  # Base frequency (in Hz)
     test_pitchf = torch.rand(1, 200)  # nsf base frequency
     test_ds = torch.LongTensor([0])  # Speaker ID

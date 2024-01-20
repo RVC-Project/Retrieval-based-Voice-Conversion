@@ -64,11 +64,11 @@ class Slicer:
     def _apply_slice(self, waveform, begin, end):
         if len(waveform.shape) > 1:
             return waveform[
-                :, begin * self.hop_size: min(waveform.shape[1], end * self.hop_size)
+                :, begin * self.hop_size : min(waveform.shape[1], end * self.hop_size)
             ]
         else:
             return waveform[
-                begin * self.hop_size: min(waveform.shape[0], end * self.hop_size)
+                begin * self.hop_size : min(waveform.shape[0], end * self.hop_size)
             ]
 
     # @timeit
@@ -106,7 +106,7 @@ class Slicer:
                 continue
             # Need slicing. Record the range of silent frames to be removed.
             if i - silence_start <= self.max_sil_kept:
-                pos = rms_list[silence_start: i + 1].argmin() + silence_start
+                pos = rms_list[silence_start : i + 1].argmin() + silence_start
                 if silence_start == 0:
                     sil_tags.append((0, pos))
                 else:
@@ -114,17 +114,17 @@ class Slicer:
                 clip_start = pos
             elif i - silence_start <= self.max_sil_kept * 2:
                 pos = rms_list[
-                    i - self.max_sil_kept: silence_start + self.max_sil_kept + 1
+                    i - self.max_sil_kept : silence_start + self.max_sil_kept + 1
                 ].argmin()
                 pos += i - self.max_sil_kept
                 pos_l = (
                     rms_list[
-                        silence_start: silence_start + self.max_sil_kept + 1
+                        silence_start : silence_start + self.max_sil_kept + 1
                     ].argmin()
                     + silence_start
                 )
                 pos_r = (
-                    rms_list[i - self.max_sil_kept: i + 1].argmin()
+                    rms_list[i - self.max_sil_kept : i + 1].argmin()
                     + i
                     - self.max_sil_kept
                 )
@@ -137,12 +137,12 @@ class Slicer:
             else:
                 pos_l = (
                     rms_list[
-                        silence_start: silence_start + self.max_sil_kept + 1
+                        silence_start : silence_start + self.max_sil_kept + 1
                     ].argmin()
                     + silence_start
                 )
                 pos_r = (
-                    rms_list[i - self.max_sil_kept: i + 1].argmin()
+                    rms_list[i - self.max_sil_kept : i + 1].argmin()
                     + i
                     - self.max_sil_kept
                 )
@@ -159,7 +159,7 @@ class Slicer:
             and total_frames - silence_start >= self.min_interval
         ):
             silence_end = min(total_frames, silence_start + self.max_sil_kept)
-            pos = rms_list[silence_start: silence_end + 1].argmin() + silence_start
+            pos = rms_list[silence_start : silence_end + 1].argmin() + silence_start
             sil_tags.append((pos, total_frames + 1))
         # Apply and return slices.
         if len(sil_tags) == 0:

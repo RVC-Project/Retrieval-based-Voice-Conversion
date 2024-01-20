@@ -18,15 +18,13 @@ try:
 except Exception:  # pylint: disable=broad-exception-caught
     pass
 import logging
+from time import time as ttime
 
 import torch.nn as nn
 import torch.nn.functional as F
+from librosa.filters import mel
 from librosa.util import normalize, pad_center, tiny
 from scipy.signal import get_window
-from librosa.filters import mel
-
-from time import time as ttime
-
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +157,6 @@ class STFT(torch.nn.Module):
         self.magnitude, self.phase = self.transform(input_data, return_phase=True)
         reconstruction = self.inverse(self.magnitude, self.phase)
         return reconstruction
-
 
 
 class BiGRU(nn.Module):
@@ -413,8 +410,6 @@ class E2E(nn.Module):
         x = self.fc(x)
         # print(x.shape)
         return x
-
-
 
 
 class MelSpectrogram(torch.nn.Module):
