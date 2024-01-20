@@ -9,7 +9,7 @@ from rvc.cli.handler.uvr5 import uvr
 
 from rvc.cli.utils.dlmodel import dlmodel
 from rvc.cli.utils.env import env
-from rvc.cli.utils.initialize import initialize
+from rvc.cli.utils.initialize import init
 
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
@@ -24,7 +24,7 @@ def main():
     cli.add_command(uvr)
     cli.add_command(dlmodel)
     cli.add_command(env)
-    cli.add_command(initialize)
+    cli.add_command(init)
     cli()
 
 

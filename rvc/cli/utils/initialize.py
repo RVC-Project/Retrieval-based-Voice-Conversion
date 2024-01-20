@@ -10,5 +10,5 @@ import click
 
 
 @click.command()
-def initialize():
+def init():
     pass
