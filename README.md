@@ -22,7 +22,39 @@ An easy-to-use Voice Conversion framework based on VITS.<br><br>
 
 ## Installation and usage
 
-## Setup env
+### Standard Setup
+
+First, create a directory in your project. The `assets` folder will contain the models needed for inference and training, and the `result` folder will contain the results of the training.
+
+```sh
+rvc init
+```
+This will create an `assets` folder and `.env` in your working directory.
+
+> [!WARNING]
+> The directory should be empty or without an assets folder.
+
+### Custom Setup
+
+If you have already downloaded models or want to change these configurations, edit the `.env` file.
+If you do not already have a `.env` file,
+
+```sh
+rvc env create
+```
+can create one.
+
+Also, when downloading a model, you can use the
+
+```sh
+rvc dlmodel
+```
+or
+```
+rvc dlmodel {download_dir}
+```
+
+Finally, specify the location of the model in the env file, and you are done!
 
 
 
