@@ -19,8 +19,7 @@ from rvc.cli.utils.initialize import initialize
 def cli():
     pass
 
-
-if __name__ == "__main__":
+def addcli():
     cli.add_command(infer)
     cli.add_command(train)
     cli.add_command(uvr)
@@ -28,3 +27,7 @@ if __name__ == "__main__":
     cli.add_command(env)
     cli.add_command(initialize)
     cli()
+
+
+if __name__ == "__main__":
+    addcli()

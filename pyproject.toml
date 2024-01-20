@@ -22,7 +22,7 @@ click = "^8.1.7"
 tensorboardx = "^2.6.2.2"
 
 [project.scripts]
-rvc = "rvc:cli"
+rvc = "rvc:addcli"
 
 [build-system]
 requires = ["poetry-core"]
