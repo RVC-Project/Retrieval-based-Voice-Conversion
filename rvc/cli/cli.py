@@ -11,7 +11,6 @@ from rvc.cli.utils.dlmodel import dlmodel
 from rvc.cli.utils.env import env
 from rvc.cli.utils.initialize import initialize
 
-
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
     help="rvc cli feature list",
@@ -19,7 +18,7 @@ from rvc.cli.utils.initialize import initialize
 def cli():
     pass
 
-def addcli():
+def main():
     cli.add_command(infer)
     cli.add_command(train)
     cli.add_command(uvr)
@@ -30,4 +29,4 @@ def addcli():
 
 
 if __name__ == "__main__":
-    addcli()
+    main()

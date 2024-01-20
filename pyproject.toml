@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rvc"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Ftps <ftpsflandre@gmail.com>"]
 readme = "README.md"
@@ -21,8 +21,8 @@ pydub = "^0.25.1"
 click = "^8.1.7"
 tensorboardx = "^2.6.2.2"
 
-[project.scripts]
-rvc = "rvc:addcli"
+[tool.poetry.scripts]
+rvc = "rvc.cli.cli:main"
 
 [build-system]
 requires = ["poetry-core"]
