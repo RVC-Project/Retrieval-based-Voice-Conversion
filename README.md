@@ -81,3 +81,24 @@ rvc infer -m {model.pth} -i {input.wav} -o {output.wav}
 | resample_sr   | -rsr       | int          | 0             | Resample the output audio in post-processing to the final sample rate. Set to 0 for no resampling                                                                                                                                              |
 | rms_mix_rate  | -rmr       | float        | 0.25          | Adjust the volume envelope scaling. Closer to 0, the more it mimicks the volume of the original vocals. Can help mask noise and make volume sound more natural when set relatively low. Closer to 1 will be more of a consistently loud volume |
 | protect       | -p         | float        | 0.33          | Protect voiceless consonants and breath sounds to prevent artifacts such as tearing in electronic music. Set to 0.5 to disable. Decrease the value to increase protection, but it may reduce indexing accuracy                                 |
+
+### API Usage
+First, start up the server.
+```sh
+rvc-api
+```
+or
+```sh
+poetry run poe rvc-api
+```
+
+#### Inference Audio
+```sh
+curl -X 'POST' \
+      'http://127.0.0.1:8000/inference' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: multipart/form-data' \
+      -F 'modelpath={model.pth}' \
+      -F 'input={input audio path}' \
+      -o {output audio path}
+```
