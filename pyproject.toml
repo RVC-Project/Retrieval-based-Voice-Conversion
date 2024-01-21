@@ -5,6 +5,9 @@ description = ""
 authors = ["Ftps <ftpsflandre@gmail.com>"]
 readme = "README.md"
 
+[tool.poetry.urls]
+github = "https://github.com/RVC-Project/Retrieval-based-Voice-Conversion"
+
 [tool.poetry.dependencies]
 python = "3.11.2"
 torch = "^2.1.0"
@@ -20,9 +23,19 @@ python-dotenv = "^1.0.0"
 pydub = "^0.25.1"
 click = "^8.1.7"
 tensorboardx = "^2.6.2.2"
+poethepoet = "^0.24.4"
+uvicorn = {version = "^0.26.0", optional=true}
+fastapi = "^0.109.0"
+python-multipart = {version = "^0.0.6", optional=true}
+
+[tool.poetry.extras]
+api = ["uvicorn", "fastapi"]
 
 [tool.poetry.scripts]
-rvc = "rvc.cli.cli:main"
+rvc = "rvc.utils.cli.cli:main"
+
+[tool.poe.tasks]
+rvc-api = "uvicorn rvc.utils.api.api:app --reload"
 
 [build-system]
 requires = ["poetry-core"]
