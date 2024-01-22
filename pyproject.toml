@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "rvc"
-version = "0.2.0"
-description = ""
+version = "0.3.2"
+description = "An easy-to-use Voice Conversion framework based on VITS."
 authors = ["Ftps <ftpsflandre@gmail.com>"]
 readme = "README.md"
 
@@ -9,9 +9,10 @@ readme = "README.md"
 github = "https://github.com/RVC-Project/Retrieval-based-Voice-Conversion"
 
 [tool.poetry.dependencies]
-python = "3.11.2"
+python = "^3.10"
 torch = "^2.1.0"
-fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
+fairseq = "^0.12.2"
+# fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
 soundfile = "^0.12.1"
 librosa = "^0.10.1"
 praat-parselmouth = "^0.4.3"

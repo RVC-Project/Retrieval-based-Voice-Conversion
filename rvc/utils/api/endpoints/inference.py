@@ -25,7 +25,6 @@ def inference(
     rms_mix_rate: float = 0.25,
     protect: float = 0.33,
 ):
-    print(protect)
     vc = VC()
     vc.get_vc(modelpath)
     tgt_sr, audio_opt, times, _ = vc.vc_single(
