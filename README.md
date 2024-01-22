@@ -58,6 +58,33 @@ Finally, specify the location of the model in the env file, and you are done!
 
 
 
+### Library Usage
+
+#### Inference Audio
+```python
+from pathlib import Path
+
+from dotenv import load_dotenv
+from scipy.io import wavfile
+
+from rvc.modules.vc.modules import VC
+
+
+def main():
+      vc = VC()
+      vc.get_vc("{model.pth}")
+      tgt_sr, audio_opt, times, _ = vc.vc_single(
+            1, Path("{InputAudio}")
+      )
+      wavfile.write("{OutputAudoi}", tgt_sr, audio_opt)
+
+
+if __name__ == "__main__":
+      load_dotenv("envPath")
+      main()
+
+```
+
 ### CLI Usage
 
 #### Inference Audio
