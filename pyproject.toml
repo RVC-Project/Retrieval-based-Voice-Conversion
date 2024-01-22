@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rvc"
-version = "0.3.3"
+version = "0.3.4"
 description = "An easy-to-use Voice Conversion framework based on VITS."
 authors = ["Ftps <ftpsflandre@gmail.com>"]
 readme = "README.md"
