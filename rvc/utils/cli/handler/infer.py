@@ -5,7 +5,7 @@ import click
 from dotenv import load_dotenv
 from scipy.io import wavfile
 
-from rvc.modules.vc.modules import VC
+
 
 logging.getLogger("numba").setLevel(logging.WARNING)
 
@@ -109,6 +109,7 @@ def infer(
     rmsmixrate,
     protect,
 ):
+    from rvc.modules.vc.modules import VC
     load_dotenv()
     vc = VC()
     vc.get_vc(modelpath)
