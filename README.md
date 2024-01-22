@@ -76,11 +76,11 @@ def main():
       tgt_sr, audio_opt, times, _ = vc.vc_single(
             1, Path("{InputAudio}")
       )
-      wavfile.write("{OutputAudoi}", tgt_sr, audio_opt)
+      wavfile.write("{OutputAudio}", tgt_sr, audio_opt)
 
 
 if __name__ == "__main__":
-      load_dotenv("envPath")
+      load_dotenv("{envPath}")
       main()
 
 ```
