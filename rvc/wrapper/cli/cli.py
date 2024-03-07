@@ -3,12 +3,12 @@ from typing import Optional, Pattern
 
 import click
 
-from rvc.utils.cli.handler.infer import infer
-from rvc.utils.cli.handler.train import train
-from rvc.utils.cli.handler.uvr5 import uvr
-from rvc.utils.cli.utils.dlmodel import dlmodel
-from rvc.utils.cli.utils.env import env
-from rvc.utils.cli.utils.initialize import init
+from rvc.wrapper.cli.handler.infer import infer
+from rvc.wrapper.cli.handler.train import train
+from rvc.wrapper.cli.handler.uvr5 import uvr
+from rvc.wrapper.cli.utils.dlmodel import dlmodel
+from rvc.wrapper.cli.utils.env import env
+from rvc.wrapper.cli.utils.initialize import init
 
 
 @click.group(

@@ -34,10 +34,10 @@ numba = "0.59.0rc1"
 api = ["uvicorn", "fastapi"]
 
 [tool.poetry.scripts]
-rvc = "rvc.utils.cli.cli:main"
+rvc = "rvc.wrapper.cli.cli:main"
 
 [tool.poe.tasks]
-rvc-api = "uvicorn rvc.utils.api.api:app --reload"
+rvc-api = "uvicorn rvc.wrapper.api.api:app --reload"
 
 [build-system]
 requires = ["poetry-core"]

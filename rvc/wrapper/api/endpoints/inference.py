@@ -1,7 +1,7 @@
 from io import BytesIO
 from pathlib import Path
 
-from fastapi import APIRouter, UploadFile, Response, responses
+from fastapi import APIRouter, Response, UploadFile, responses
 from pydantic import BaseModel
 from scipy.io import wavfile
 
