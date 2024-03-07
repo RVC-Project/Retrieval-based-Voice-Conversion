@@ -243,7 +243,7 @@ class MDXNetDereverb:
         self.onnx = "assets/uvr5_weights/onnx_dereverb_By_FoxJoy"
         self.shifts = 10  # 'Predict with randomised equivariant stabilisation'
         self.mixing = "min_mag"  # ['default','min_mag','max_mag']
-        self.chunks = chunks
+        self.chunks = chunks  # 15
         self.margin = 44100
         self.dim_t = 9
         self.dim_f = 3072
