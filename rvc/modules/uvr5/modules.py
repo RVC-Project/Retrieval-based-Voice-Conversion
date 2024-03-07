@@ -64,11 +64,9 @@ class UVR:
                 )
 
             results.append(
-
-                    pre_fun.process(
-                        tmp_path or process_path,
-                    )
-                
+                pre_fun.process(
+                    tmp_path or process_path,
+                )
             )
             infos.append(f"{os.path.basename(process_path)}->Success")
 

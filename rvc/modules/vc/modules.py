@@ -1,5 +1,4 @@
 import logging
-import os
 import traceback
 from collections import OrderedDict
 from io import BytesIO
