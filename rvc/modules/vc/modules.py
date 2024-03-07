@@ -85,7 +85,7 @@ class VC:
 
         return self.n_spk, return_protect, index
 
-    def vc_single(
+    def vc_inference(
         self,
         sid: int,
         input_audio_path: Path,
@@ -164,7 +164,7 @@ class VC:
             paths = [path.name for path in paths]
             infos = []
             for path in paths:
-                tgt_sr, audio_opt, _, info = self.vc_single(
+                tgt_sr, audio_opt, _, info = self.vc_inference(
                     sid,
                     Path(path),
                     f0_up_key,

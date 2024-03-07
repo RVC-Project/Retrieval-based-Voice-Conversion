@@ -112,7 +112,7 @@ def infer(
     load_dotenv()
     vc = VC()
     vc.get_vc(modelpath)
-    tgt_sr, audio_opt, times, _ = vc.vc_single(
+    tgt_sr, audio_opt, times, _ = vc.vc_inference(
         sid,
         inputpath,
         f0upkey,
