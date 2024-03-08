@@ -17,7 +17,7 @@ Un framework de conversión de voz basado en VITS y fácil de usar.<br><br>
 ------
 
 
-> [!NOTA]
+> [!NOTE]
 > Actualmente en desarrollo... Proporcionado como biblioteca y API en rvc
 
 ## Instalación y uso
@@ -31,7 +31,7 @@ rvc init
 ```
 Esto creará la carpeta `assets` y `.env` en su directorio de trabajo.
 
-> [!ADVERTENCIA]
+> [!WARNING]
 > El directorio debe de estar vacío o sin una carpeta de assets.
 
 ### Configuración personalizada
