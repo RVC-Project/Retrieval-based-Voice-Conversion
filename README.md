@@ -21,6 +21,19 @@ An easy-to-use Voice Conversion framework based on VITS.<br><br>
 > Currently under development... Provided as a library and API in rvc
 
 ## Installation and usage
+Installation is as easy as doing
+```sh
+pip install rvc
+```
+Installing other Dependencies
+```sh
+pip install fairseq soundfile librosa praat-parselmouth pyworld torchcrepe av faiss-cpu python-dotenv pydub click tensorboardx poethepoet uvicorn fastapi python-multipart numba
+```
+If you want to use it with cpu install the cpu only torch
+```
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+else just do the usual install.
 
 ### Standard Setup
 
