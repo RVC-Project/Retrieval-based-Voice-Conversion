@@ -20,7 +20,9 @@ def inference(
     res_type: str = Query("blob", enum=["blob", "json"]),
     sid: int = 0,
     f0_up_key: int = 0,
-    f0_method: str = Query("rmvpe", enum=["pm", "harvest", "dio", "rmvpe", "rmvpe_gpu"]),
+    f0_method: str = Query(
+        "rmvpe", enum=["pm", "harvest", "dio", "rmvpe", "rmvpe_gpu"]
+    ),
     f0_file: Path | None = None,
     index_file: Path | None = None,
     index_rate: float = 0.75,
@@ -54,5 +56,9 @@ def inference(
             headers={"Content-Disposition": "attachment; filename=inference.wav"},
         )
     else:
-        return JSONResponse({"time": json.loads(json.dumps(times)), "audio": b64encode(wv.read()).decode('utf-8')})
-
+        return JSONResponse(
+            {
+                "time": json.loads(json.dumps(times)),
+                "audio": b64encode(wv.read()).decode("utf-8"),
+            }
+        )
