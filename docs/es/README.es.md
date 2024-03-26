@@ -120,12 +120,23 @@ poetry run poe rvc-api
 ```
 
 #### Inferir audio
+
+##### Obtener como blob
 ```sh
 curl -X 'POST' \
-      'http://127.0.0.1:8000/inference' \
+      'http://127.0.0.1:8000/inference?res_type=blob' \
       -H 'accept: application/json' \
       -H 'Content-Type: multipart/form-data' \
-      -F 'modelpath={modelo.pth}' \
-      -F 'input={ruta del audio de entrada}' \
-      -o {ruta del audio de salida}
+      -F 'modelpath={model.pth}' \
+      -F 'input={input audio path}'
+```
+
+##### Obtener como json(incluir tiempo)
+```sh
+curl -X 'POST' \
+      'http://127.0.0.1:8000/inference?res_type=json' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: multipart/form-data' \
+      -F 'modelpath={model.pth}' \
+      -F 'input={input audio path}'
 ```
