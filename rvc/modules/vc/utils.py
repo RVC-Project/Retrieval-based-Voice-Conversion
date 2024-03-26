@@ -13,7 +13,7 @@ def get_index_path_from_model(sid):
                 for name in files
                 if name.endswith(".index") and "trained" not in name
             ]
-            if sid.split(".")[0] in f
+            if str(sid).split(".")[0] in f
         ),
         "",
     )

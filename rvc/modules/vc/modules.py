@@ -36,8 +36,8 @@ class VC:
 
         self.config = Config()
 
-    def get_vc(self, sid: str, *to_return_protect: int):
-        logger.info("Get sid: " + sid)
+    def get_vc(self, sid: str | Path, *to_return_protect: int):
+        logger.info("Get sid: " + os.path.basename(sid))
 
         return_protect = [
             to_return_protect[0] if self.if_f0 != 0 and to_return_protect else 0.5,
