@@ -9,14 +9,26 @@ from pydantic import BaseModel
 from scipy.io import wavfile
 from base64 import b64encode
 from rvc.modules.vc.modules import VC
+import glob
+import os
 
 router = APIRouter()
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @router.post("/inference")
 def inference(
-    modelpath: Path | UploadFile,
     input_audio: Path | UploadFile,
+    modelpath: Path
+    | UploadFile = Body(
+        ...,
+        enum=[
+            os.path.basename(file)
+            for file in glob.glob(f"{os.getenv('weight_root')}/*")
+        ],
+    ),
     res_type: str = Query("blob", enum=["blob", "json"]),
     sid: int = 0,
     f0_up_key: int = 0,
