@@ -22,6 +22,11 @@ An easy-to-use Voice Conversion framework based on VITS.<br><br>
 
 ## Installation and usage
 
+### Install rvc using pip
+```sh
+pip install git+https://github.com/RVC-Project/Retrieval-based-Voice-Conversion
+```
+
 ### Standard Setup
 
 First, create a directory in your project. The `assets` folder will contain the models needed for inference and training, and the `result` folder will contain the results of the training.
