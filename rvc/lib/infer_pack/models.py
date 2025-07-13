@@ -392,6 +392,12 @@ class SineGen(torch.nn.Module):
         output uv: tensor(batchsize=1, length, 1)
         """
         with torch.no_grad():
+            device = next(self.parameters(), None)
+            if device is not None:
+                device = device.device
+            else:
+                device = f0.device
+            align_corners = device.type != "xpu"
             f0 = f0[:, None].transpose(1, 2)
             f0_buf = torch.zeros(f0.shape[0], f0.shape[1], self.dim, device=f0.device)
             # fundamental component
@@ -412,7 +418,7 @@ class SineGen(torch.nn.Module):
                 tmp_over_one.transpose(2, 1),
                 scale_factor=float(upp),
                 mode="linear",
-                align_corners=True,
+                align_corners=align_corners,
             ).transpose(2, 1)
             rad_values = F.interpolate(
                 rad_values.transpose(2, 1), scale_factor=float(upp), mode="nearest"
