@@ -6,7 +6,3 @@ __pycache__/
 *$py.class
 
 .DS_Store
-test.py
-.gitignore
-input.wav
-output.wav
