@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rvc"
-version = "0.3.5"
+version = "0.3.6"
 description = "An easy-to-use Voice Conversion framework based on VITS."
 authors = ["Ftps <ftpsflandre@gmail.com>"]
 readme = "README.md"
@@ -10,8 +10,8 @@ github = "https://github.com/RVC-Project/Retrieval-based-Voice-Conversion"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-torch = "^2.1.0"
-fairseq = "^0.12.2"
+torch = ">=2.1.0"
+fairseq = ">=0.12.2"
 # fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
 soundfile = "^0.12.1"
 librosa = "^0.10.1"
@@ -27,8 +27,8 @@ tensorboardx = "^2.6.2.2"
 poethepoet = "^0.24.4"
 uvicorn = "^0.26.0"
 fastapi = "^0.109.0"
-python-multipart = "^0.0.6"
-numba = "0.59.0rc1"
+python-multipart = ">=0.0.6"
+numba = ">=0.59.0"
 
 [tool.poetry.extras]
 api = ["uvicorn", "fastapi"]
