@@ -47,7 +47,7 @@ class VC:
         person = sid if os.path.exists(sid) else f'{os.getenv("weight_root")}/{sid}'
         logger.info(f"Loading: {person}")
 
-        self.cpt = torch.load(person, map_location="cpu")
+        self.cpt = torch.load(person, weights_only=False, map_location="cpu")
         self.tgt_sr = self.cpt["config"][-1]
         self.cpt["config"][-3] = self.cpt["weight"]["emb_g.weight"].shape[0]  # n_spk
         self.if_f0 = self.cpt.get("f0", 1)
