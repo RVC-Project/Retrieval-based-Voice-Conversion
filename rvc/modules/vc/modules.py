@@ -56,7 +56,7 @@ class VC:
         if not os.path.exists(person) or person.endswith("/"):
             raise FileNotFoundError(f"model file not found (path: {person}).")
 
-        self.cpt = torch.load(person, map_location="cpu")
+        self.cpt = torch.load(person, weights_only=False, map_location="cpu")
         self.tgt_sr = self.cpt["config"][-1]
         self.cpt["config"][-3] = self.cpt["weight"]["emb_g.weight"].shape[0]  # n_spk
         self.if_f0 = self.cpt.get("f0", 1)
