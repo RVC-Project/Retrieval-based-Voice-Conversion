@@ -52,10 +52,10 @@ class VC:
         weight_root = os.getenv("weight_root")
         person = sid if os.path.exists(sid) else f'{weight_root if weight_root is not None else "."}/{sid}'
         logger.info(f"Loading: {person}")
-
+        
         if not os.path.exists(person) or person.endswith("/"):
             raise FileNotFoundError(f"model file not found (path: {person}).")
-
+        
         self.cpt = torch.load(person, weights_only=False, map_location="cpu")
         self.tgt_sr = self.cpt["config"][-1]
         self.cpt["config"][-3] = self.cpt["weight"]["emb_g.weight"].shape[0]  # n_spk

@@ -11,8 +11,8 @@ github = "https://github.com/RVC-Project/Retrieval-based-Voice-Conversion"
 [tool.poetry.dependencies]
 python = "^3.10"
 torch = "^2.1.0"
-fairseq = "^0.12.2"
-# fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
+#fairseq = "^0.12.2"
+fairseq = {git = "https://github.com/Tps-F/fairseq.git", branch="main"}
 soundfile = "^0.12.1"
 librosa = "^0.10.1"
 praat-parselmouth = "^0.4.3"
