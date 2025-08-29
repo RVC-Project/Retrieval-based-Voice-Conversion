@@ -28,7 +28,7 @@ poethepoet = "^0.24.4"
 uvicorn = "^0.26.0"
 fastapi = "^0.109.0"
 python-multipart = "^0.0.6"
-numba = "0.59.0rc1"
+numba = "0.58.1"
 
 [tool.poetry.extras]
 api = ["uvicorn", "fastapi"]
