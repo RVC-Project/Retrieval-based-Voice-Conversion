@@ -104,10 +104,13 @@ def wavread_rosa(filepath:str,
         tuple[np.ndarray, int]: A tuple containing the audio data
             as a NumPy array and the sample rate.
     """
-    return wavread(filepath,
+    x, fs = wavread(filepath,
         fs = fs,
         ch = 1 if mono else 2,
         dtype = dtype,
         res_type = res_type,
       **kwargs)
+    if x.shape[0] < 2:
+        x = x.squeeze(0)
+    return x, fs
 ##
