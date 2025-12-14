@@ -12,6 +12,7 @@ from rvc.lib.uvr5_pack.lib_v5 import spec_utils
 from rvc.lib.uvr5_pack.lib_v5.model_param_init import ModelParameters
 from rvc.lib.uvr5_pack.lib_v5.nets_new import CascadedNet
 from rvc.lib.uvr5_pack.utils import inference
+from rvc.lib.uvr5_pack.ffio import wavread_rosa as ffread_rosa
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,11 @@ class AudioPreprocess:
     def process(
         self,
         music_file,
-    ):
+        ## Param for trying to read audio using `ffmpeg`,
+        ##  but still resampling using `librosa.resample`,
+        ##  implemented in the file ".../uvr5_pack/ffio.py"
+        load_using_ffmpeg:bool = False,
+      **kwargs):
         x_wave, y_wave, x_spec_s, y_spec_s = {}, {}, {}, {}
         bands_n = len(self.mp.param["band"])
 
@@ -57,13 +62,22 @@ class AudioPreprocess:
             bp = self.mp.param["band"][d]
             if d == bands_n:  # high-end band
                 # librosa loading may be buggy for some audio. ffmpeg will solve this, but it's a pain
-                x_wave[d] = librosa.core.load(
-                    music_file,
-                    sr=bp["sr"],
-                    mono=False,
-                    dtype=np.float32,
-                    res_type=bp["res_type"],
-                )[0]
+                if load_using_ffmpeg: # [TODO] Serious Unit Tests may be Required
+                    x_wave[d] = ffread_rosa(
+                        music_file,
+                        fs = bp["sr"],
+                        mono = False,
+                        dtype = np.float32,
+                        res_type = bp["res_type"],
+                        )[0]
+                else:
+                    x_wave[d] = librosa.core.load(
+                        music_file,
+                        sr=bp["sr"],
+                        mono=False,
+                        dtype=np.float32,
+                        res_type=bp["res_type"],
+                        )[0]
                 if x_wave[d].ndim == 1:
                     x_wave[d] = np.asfortranarray([x_wave[d], x_wave[d]])
             else:  # lower bands
